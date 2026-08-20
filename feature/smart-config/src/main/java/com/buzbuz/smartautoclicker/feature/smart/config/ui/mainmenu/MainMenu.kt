@@ -24,7 +24,7 @@ import android.view.ViewGroup
 import android.view.View
 import android.widget.Toast
 import androidx.core.view.isVisible
-import com.buzbuz.smartautoclicker.feature.recordingconfig.overlay.RecordingOverlay
+import com.buzbuz.smartautoclicker.feature.recordingconfig.overlay.RecordingMenu
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -203,7 +203,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
     private fun onRecordClicked() {
         val scenarioId = viewModel.getActiveScenarioId() ?: return
-        val recordingOverlay = RecordingOverlay(
+        val recordingMenu = RecordingMenu(
             scenarioId = scenarioId,
             touchRecorder = viewModel.touchRecorder,
             onRecordingCompleted = { recording ->
@@ -219,7 +219,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
         overlayManager.navigateTo(
             context = context,
-            newOverlay = recordingOverlay,
+            newOverlay = recordingMenu,
             hideCurrent = true,
         )
     }
