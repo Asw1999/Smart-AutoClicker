@@ -30,6 +30,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
+import com.buzbuz.smartautoclicker.core.domain.model.action.PlayRecording
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
@@ -134,6 +135,7 @@ private fun Action.getDebugIcon(): Int =
         is Intent -> R.drawable.ic_intent
         is Notification -> R.drawable.ic_action_notification
         is Pause -> R.drawable.ic_wait
+        is PlayRecording -> R.drawable.ic_recording
         is SetText -> R.drawable.ic_action_set_text
         is Swipe -> R.drawable.ic_swipe
         is SystemAction -> R.drawable.ic_action_system

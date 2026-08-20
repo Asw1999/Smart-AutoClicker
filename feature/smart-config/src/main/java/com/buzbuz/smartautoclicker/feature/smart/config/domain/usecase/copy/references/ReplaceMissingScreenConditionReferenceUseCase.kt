@@ -23,6 +23,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
+import com.buzbuz.smartautoclicker.core.domain.model.action.PlayRecording
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
@@ -79,6 +80,7 @@ class ReplaceMissingScreenConditionReferenceUseCase @Inject constructor() {
             is Intent,
             is Notification,
             is Pause,
+            is PlayRecording,
             is SetText,
             is Swipe,
             is SystemAction,

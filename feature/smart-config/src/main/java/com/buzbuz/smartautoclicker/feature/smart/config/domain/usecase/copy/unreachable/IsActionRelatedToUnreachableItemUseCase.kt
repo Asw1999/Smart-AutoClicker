@@ -24,6 +24,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
+import com.buzbuz.smartautoclicker.core.domain.model.action.PlayRecording
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
@@ -56,7 +57,8 @@ class IsActionRelatedToUnreachableItemUseCase @Inject constructor(
             is Pause,
             is Swipe,
             is Intent,
-            is SystemAction -> false
+            is SystemAction,
+            is PlayRecording -> false
         }
     }
 

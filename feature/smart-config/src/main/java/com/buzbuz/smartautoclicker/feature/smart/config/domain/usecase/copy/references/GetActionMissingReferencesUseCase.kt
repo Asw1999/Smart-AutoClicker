@@ -25,6 +25,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
+import com.buzbuz.smartautoclicker.core.domain.model.action.PlayRecording
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
@@ -67,6 +68,7 @@ class GetActionMissingReferencesUseCase @Inject constructor(
             // Nothing is referenced in those actions
             is Intent,
             is Pause,
+            is PlayRecording,
             is Swipe,
             is SystemAction -> emptyList()
         }

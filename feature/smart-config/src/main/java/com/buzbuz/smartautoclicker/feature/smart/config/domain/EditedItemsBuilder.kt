@@ -36,6 +36,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Click.PositionType
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
+import com.buzbuz.smartautoclicker.core.domain.model.action.PlayRecording
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
@@ -418,6 +419,7 @@ class EditedItemsBuilder internal constructor(
         is Notification -> createNewNotificationFrom(from, eventId)
         is SystemAction -> createNewSystemActionFrom(from, eventId)
         is SetText -> createNewSetTextFrom(from, eventId)
+        is PlayRecording -> createNewPlayRecordingFrom(from, eventId)
     }
 
     private fun createNewClickFrom(from: Click, eventId: Identifier): Click {
@@ -532,6 +534,16 @@ class EditedItemsBuilder internal constructor(
             name = "" + from.name,
             text = from.text,
             validateInput = from.validateInput,
+        )
+    }
+
+    private fun createNewPlayRecordingFrom(from: PlayRecording, eventId: Identifier): PlayRecording {
+        val actionId = actionsIdCreator.generateNewIdentifier()
+
+        return from.copy(
+            id = actionId,
+            eventId = eventId,
+            name = "" + from.name,
         )
     }
 

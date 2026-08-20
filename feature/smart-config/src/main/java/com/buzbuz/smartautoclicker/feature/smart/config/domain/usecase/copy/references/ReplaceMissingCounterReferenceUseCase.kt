@@ -24,6 +24,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
+import com.buzbuz.smartautoclicker.core.domain.model.action.PlayRecording
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
@@ -105,6 +106,7 @@ class ReplaceMissingCounterReferenceUseCase @Inject constructor() {
             is Click,
             is Intent,
             is Pause,
+            is PlayRecording,
             is Swipe,
             is SystemAction,
             is ToggleEvent -> {
