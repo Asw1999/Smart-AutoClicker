@@ -22,7 +22,9 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.View
+import android.widget.Toast
 import androidx.core.view.isVisible
+import com.buzbuz.smartautoclicker.feature.recordingconfig.overlay.RecordingOverlay
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -193,9 +195,33 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
             R.id.btn_play -> onPlayPauseClicked()
+            R.id.btn_record -> onRecordClicked()
             R.id.btn_click_list -> onConfigureClicked()
             R.id.btn_stop -> onStopClicked()
         }
+    }
+
+    private fun onRecordClicked() {
+        val scenarioId = viewModel.getActiveScenarioId() ?: return
+        val recordingOverlay = RecordingOverlay(
+            scenarioId = scenarioId,
+            touchRecorder = viewModel.touchRecorder,
+            onRecordingCompleted = { recording ->
+                viewModel.saveRecording(recording) { recordingId ->
+                    Toast.makeText(
+                        context,
+                        "Recorded ${recording.touchEvents.size} points (${recording.durationMs}ms)",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        )
+
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = recordingOverlay,
+            hideCurrent = true,
+        )
     }
 
     override fun getWindowMaximumSize(backgroundView: ViewGroup): Size {

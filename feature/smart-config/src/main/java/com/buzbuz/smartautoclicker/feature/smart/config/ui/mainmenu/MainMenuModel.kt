@@ -33,6 +33,9 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.impl.monitoring.ViewPosi
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
+import com.buzbuz.smartautoclicker.core.recording.domain.Recording
+import com.buzbuz.smartautoclicker.core.recording.domain.RecordingRepository
+import com.buzbuz.smartautoclicker.core.recording.recorder.TouchRecorder
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.alphabet.AreRequiredAlphabetModelsInstalledUseCase
 
@@ -62,6 +65,8 @@ class MainMenuModel @Inject constructor(
     private val revenueRepository: IRevenueRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
     private val debuggingRepository: DebuggingRepository,
+    val touchRecorder: TouchRecorder,
+    private val recordingRepository: RecordingRepository,
     areRequiredAlphabetModelsInstalledUseCase: AreRequiredAlphabetModelsInstalledUseCase,
 ) : ViewModel() {
 
@@ -204,6 +209,17 @@ class MainMenuModel @Inject constructor(
             editionRepository.stopEdition()
         }
     }
+
+    fun saveRecording(recording: Recording, onSaved: ((Long) -> Unit)? = null) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val id = recordingRepository.saveRecording(recording)
+            withContext(Dispatchers.Main) {
+                onSaved?.invoke(id)
+            }
+        }
+    }
+
+    fun getActiveScenarioId(): Long? = scenarioDbId.value
 
     fun monitorViews(playMenuButton: View, configMenuButton: View) {
         monitoredViewsManager.apply {
