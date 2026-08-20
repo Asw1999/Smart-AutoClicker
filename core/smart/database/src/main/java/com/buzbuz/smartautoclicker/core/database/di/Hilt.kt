@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.core.database.migrations.Migration4to5
 import com.buzbuz.smartautoclicker.core.database.migrations.Migration5to6
 import com.buzbuz.smartautoclicker.core.database.migrations.Migration6to7
 import com.buzbuz.smartautoclicker.core.database.migrations.Migration9to10
+import com.buzbuz.smartautoclicker.core.recording.data.RecordingDao
 
 import dagger.Module
 import dagger.Provides
@@ -65,4 +66,9 @@ internal object SmartDatabaseModule {
             Migration21to22,
         ).build()
 
+    @Provides
+    @Singleton
+    fun providesRecordingDao(
+        database: ClickDatabase,
+    ): RecordingDao = database.recordingDao()
 }

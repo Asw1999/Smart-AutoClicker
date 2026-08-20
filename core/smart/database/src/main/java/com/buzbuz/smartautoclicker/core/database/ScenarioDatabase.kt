@@ -22,6 +22,7 @@ import com.buzbuz.smartautoclicker.core.database.dao.ConditionDao
 import com.buzbuz.smartautoclicker.core.database.dao.CountersDao
 import com.buzbuz.smartautoclicker.core.database.dao.EventDao
 import com.buzbuz.smartautoclicker.core.database.dao.ScenarioDao
+import com.buzbuz.smartautoclicker.core.recording.data.RecordingDao
 
 abstract class ScenarioDatabase : RoomDatabase() {
 
@@ -35,4 +36,6 @@ abstract class ScenarioDatabase : RoomDatabase() {
     abstract fun actionDao(): ActionDao
     /** The data access object for the counters in the database. */
     abstract fun countersDao(): CountersDao
+    /** The data access object for recordings in the database. */
+    abstract fun recordingDao(): RecordingDao
 }

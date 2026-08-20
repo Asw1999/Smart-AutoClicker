@@ -28,6 +28,8 @@ import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioStatsEntity
 import com.buzbuz.smartautoclicker.core.database.migrations.*
+import com.buzbuz.smartautoclicker.core.recording.data.RecordedTouchEntity
+import com.buzbuz.smartautoclicker.core.recording.data.RecordingEntity
 
 import javax.inject.Singleton
 
@@ -42,6 +44,8 @@ import javax.inject.Singleton
         EventToggleEntity::class,
         ScenarioStatsEntity::class,
         CountersEntity::class,
+        RecordingEntity::class,
+        RecordedTouchEntity::class,
     ],
     version = DATABASE_VERSION,
     exportSchema = true,

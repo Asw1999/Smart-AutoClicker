@@ -16,6 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.core.recording.data
 
+import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
+import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers
 import com.buzbuz.smartautoclicker.core.recording.domain.Recording
 import com.buzbuz.smartautoclicker.core.recording.domain.RecordingRepository
 
@@ -30,7 +32,7 @@ import javax.inject.Singleton
 @Singleton
 class RecordingRepositoryImpl @Inject constructor(
     private val recordingDao: RecordingDao,
-    private val ioDispatcher: CoroutineDispatcher,
+    @Dispatcher(HiltCoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
 ) : RecordingRepository {
 
     override fun getRecordings(scenarioId: Long): Flow<List<Recording>> =
