@@ -36,7 +36,7 @@ data class PlayRecording(
     override val id: Identifier = Identifier(0, asTemporary = true),
     override val eventId: Identifier = Identifier(0, asTemporary = true),
     override val name: String? = null,
-    override val priority: Int = 0,
+    override var priority: Int = 0,
     val recordingId: Long? = null,
     val replaySpeed: Float = 1.0f,
     val replayRepeat: Int = 1,
