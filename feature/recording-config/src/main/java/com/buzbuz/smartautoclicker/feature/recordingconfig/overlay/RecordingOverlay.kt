@@ -16,122 +16,62 @@
  */
 package com.buzbuz.smartautoclicker.feature.recordingconfig.overlay
 
-import android.content.Context
-import android.graphics.PixelFormat
-import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
-import android.view.WindowManager
 
-import com.buzbuz.smartautoclicker.core.common.overlays.OverlayManager
+import com.buzbuz.smartautoclicker.core.common.overlays.other.FullscreenOverlay
 import com.buzbuz.smartautoclicker.core.recording.domain.Recording
 import com.buzbuz.smartautoclicker.core.recording.recorder.TouchRecorder
-import com.buzbuz.smartautoclicker.feature.recordingconfig.R
 import com.buzbuz.smartautoclicker.feature.recordingconfig.databinding.OverlayRecordingBinding
 
-import javax.inject.Inject
-import javax.inject.Singleton
-
 /**
- * Full-screen overlay that captures touch events for recording
- * while showing a visual indicator (green border + controls).
+ * Fullscreen overlay that captures touch events for recording
+ * while displaying a green border indicator and control buttons.
+ *
+ * Managed by OverlayManager via navigation.
  */
-@Singleton
-class RecordingOverlay @Inject constructor(
-    private val overlayManager: OverlayManager,
+class RecordingOverlay(
+    private val scenarioId: Long,
     private val touchRecorder: TouchRecorder,
-) {
+    private val onRecordingCompleted: (Recording) -> Unit,
+) : FullscreenOverlay() {
 
-    private var binding: OverlayRecordingBinding? = null
-    private var onRecordingCompleted: ((Recording) -> Unit)? = null
-    private var onRecordingCancelled: (() -> Unit)? = null
+    private lateinit var binding: OverlayRecordingBinding
 
-    /**
-     * Show the recording overlay and start capturing touches.
-     *
-     * @param context the context to inflate views.
-     * @param scenarioId the scenario ID to associate the recording with.
-     * @param onCompleted callback invoked when recording is stopped with a result.
-     * @param onCancelled callback invoked when recording is cancelled.
-     */
-    fun show(
-        context: Context,
-        scenarioId: Long,
-        onCompleted: (Recording) -> Unit,
-        onCancelled: () -> Unit = {},
-    ) {
-        if (binding != null) return
+    override fun onCreateView(layoutInflater: LayoutInflater): View {
+        binding = OverlayRecordingBinding.inflate(layoutInflater)
+        return binding.root
+    }
 
-        onRecordingCompleted = onCompleted
-        onRecordingCancelled = onCancelled
-
-        val inflater = LayoutInflater.from(context)
-        val viewBinding = OverlayRecordingBinding.inflate(inflater)
-        binding = viewBinding
-
-        setupViews(viewBinding)
+    override fun onViewCreated() {
         touchRecorder.startRecording(scenarioId)
 
-        // Overlay layout params - full screen, intercept touches
-        val params = WindowManager.LayoutParams(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.MATCH_PARENT,
-            overlayManager.overlayWindowType,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-            PixelFormat.TRANSLUCENT,
-        ).apply {
-            gravity = Gravity.TOP or Gravity.START
-        }
-
-        // Set touch listener on root to capture all motion events
-        viewBinding.recordingOverlayRoot.setOnTouchListener { _, event ->
+        binding.recordingOverlayRoot.setOnTouchListener { _, event ->
             touchRecorder.recordMotionEvent(event)
-            viewBinding.textEventCount.text = "${touchRecorder.eventCount} pts"
-            // Return false so touch passes through to apps underneath if configured,
-            // or true to consume
+            binding.textEventCount.text = "${touchRecorder.eventCount} pts"
             false
         }
 
-        overlayManager.addView(viewBinding.root, params)
-    }
-
-    /**
-     * Hide and remove the recording overlay.
-     */
-    fun hide() {
-        binding?.let { viewBinding ->
-            overlayManager.removeView(viewBinding.root)
-            binding = null
-            onRecordingCompleted = null
-            onRecordingCancelled = null
-        }
-    }
-
-    private fun setupViews(viewBinding: OverlayRecordingBinding) {
-        viewBinding.buttonPauseResume.setOnClickListener {
+        binding.buttonPauseResume.setOnClickListener {
             when (touchRecorder.state.value) {
                 TouchRecorder.State.RECORDING -> {
                     touchRecorder.pauseRecording()
-                    viewBinding.buttonPauseResume.setImageResource(android.R.drawable.ic_media_play)
-                    viewBinding.statusIndicator.visibility = View.INVISIBLE
+                    binding.buttonPauseResume.setImageResource(android.R.drawable.ic_media_play)
+                    binding.statusIndicator.visibility = View.INVISIBLE
                 }
                 TouchRecorder.State.PAUSED -> {
                     touchRecorder.resumeRecording()
-                    viewBinding.buttonPauseResume.setImageResource(android.R.drawable.ic_media_pause)
-                    viewBinding.statusIndicator.visibility = View.VISIBLE
+                    binding.buttonPauseResume.setImageResource(android.R.drawable.ic_media_pause)
+                    binding.statusIndicator.visibility = View.VISIBLE
                 }
                 TouchRecorder.State.IDLE -> Unit
             }
         }
 
-        viewBinding.buttonStop.setOnClickListener {
+        binding.buttonStop.setOnClickListener {
             val recording = touchRecorder.stopRecording()
-            val callback = onRecordingCompleted
-            hide()
-            callback?.invoke(recording)
+            finish()
+            onRecordingCompleted(recording)
         }
     }
 }
