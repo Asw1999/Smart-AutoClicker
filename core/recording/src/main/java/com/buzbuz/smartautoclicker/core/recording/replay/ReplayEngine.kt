@@ -162,8 +162,7 @@ class ReplayEngine @Inject constructor(
 
             val gesture = buildGestureForBatch(batch, params, random)
             if (gesture != null) {
-                val result = actionExecutor.dispatchGesture(gesture)
-                if (!result) return false
+                actionExecutor.dispatchGesture(gesture)
             }
 
             val batchEndMs = (batch.maxOf { it.endTimeMs } / params.speedMultiplier).toLong()

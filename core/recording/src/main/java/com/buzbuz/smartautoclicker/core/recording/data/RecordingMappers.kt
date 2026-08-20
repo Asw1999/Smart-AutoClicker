@@ -24,7 +24,7 @@ import com.buzbuz.smartautoclicker.core.recording.domain.TouchEvent
 
 fun RecordingEntity.toDomain(events: List<RecordedTouchEntity> = emptyList()): Recording =
     Recording(
-        id = Identifier(id),
+        id = Identifier(databaseId = id),
         scenarioId = scenarioId,
         name = name,
         touchEvents = events.map { it.toDomain() },

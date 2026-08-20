@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.core.common.actions.utils
 
 import com.buzbuz.smartautoclicker.core.common.actions.GESTURE_DURATION_MAX_VALUE
 
-internal const val MINIMUM_STROKE_DURATION_MS = 1L
-internal const val MAXIMUM_STROKE_DURATION_MS = GESTURE_DURATION_MAX_VALUE
-internal const val RANDOMIZATION_POSITION_MAX_OFFSET_PX = 5
-internal const val RANDOMIZATION_DURATION_MAX_OFFSET_MS = 5L
+const val MINIMUM_STROKE_DURATION_MS = 1L
+const val MAXIMUM_STROKE_DURATION_MS = GESTURE_DURATION_MAX_VALUE
+const val RANDOMIZATION_POSITION_MAX_OFFSET_PX = 5
+const val RANDOMIZATION_DURATION_MAX_OFFSET_MS = 5L
