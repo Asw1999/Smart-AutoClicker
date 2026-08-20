@@ -16,6 +16,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
+import com.buzbuz.smartautoclicker.core.domain.model.action.PlayRecording
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
@@ -34,6 +35,7 @@ internal fun CompleteActionEntity.toDomain(cleanIds: Boolean = false): Action = 
     ActionType.NOTIFICATION -> toDomainNotification(cleanIds)
     ActionType.SYSTEM -> toDomainSystem(cleanIds)
     ActionType.TEXT -> toDomainSetText(cleanIds)
+    ActionType.PLAY_RECORDING -> toDomainPlayRecording(cleanIds)
 }
 
 private fun CompleteActionEntity.toDomainClick(cleanIds: Boolean = false) = Click(
@@ -129,6 +131,19 @@ private fun CompleteActionEntity.toDomainSetText(cleanIds: Boolean = false) = Se
     priority = action.priority,
     text = action.textValue ?: "",
     validateInput = action.textValidateInput ?: false,
+)
+
+private fun CompleteActionEntity.toDomainPlayRecording(cleanIds: Boolean = false) = PlayRecording(
+    id = Identifier(id = action.id, asTemporary = cleanIds),
+    eventId = Identifier(id = action.eventId, asTemporary = cleanIds),
+    name = action.name,
+    priority = action.priority,
+    recordingId = action.recordingId,
+    replaySpeed = action.replaySpeed ?: 1.0f,
+    replayRepeat = action.replayRepeat ?: 1,
+    replayDelayMs = action.replayDelayMs ?: 0L,
+    replayRandomizePx = action.replayRandomizePx ?: 0,
+    replayRandomizeTimingMs = action.replayRandomizeTimingMs ?: 0,
 )
 
 private fun ClickPositionType.toDomain(): Click.PositionType =

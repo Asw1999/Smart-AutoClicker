@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (C) 2026 Smart-AutoClicker Contributors
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/recording_overlay_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <!-- Green recording border indicator -->
+    <View
+        android:id="@+id/recording_border"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/recording_border" />
+
+    <!-- Recording control bar (bottom-left) -->
+    <LinearLayout
+        android:id="@+id/recording_controls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="16dp"
+        android:orientation="horizontal"
+        android:background="@drawable/recording_controls_bg"
+        android:padding="4dp">
+
+        <!-- Status indicator (blinking red dot) -->
+        <View
+            android:id="@+id/status_indicator"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/recording_dot" />
+
+        <!-- Event count text -->
+        <TextView
+            android:id="@+id/text_event_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp"
+            android:text="0 pts"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+        <!-- Pause / Resume button -->
+        <ImageButton
+            android:id="@+id/button_pause_resume"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Pause or resume recording"
+            android:src="@android:drawable/ic_media_pause"
+            app:tint="@android:color/white" />
+
+        <!-- Stop button -->
+        <ImageButton
+            android:id="@+id/button_stop"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Stop recording"
+            android:src="@android:drawable/ic_delete"
+            app:tint="@android:color/holo_red_light" />
+
+    </LinearLayout>
+
+</FrameLayout>

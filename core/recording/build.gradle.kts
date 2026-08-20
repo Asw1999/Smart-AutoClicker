@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2026 Smart-AutoClicker Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,16 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
-    alias(libs.plugins.buzbuz.androidUnitTest)
+    alias(libs.plugins.buzbuz.androidRoom)
     alias(libs.plugins.buzbuz.flavour)
+    alias(libs.plugins.buzbuz.kotlinSerialization)
     alias(libs.plugins.buzbuz.hilt)
 }
 
 android {
-    namespace = "com.buzbuz.smartautoclicker.core.processing"
+    namespace = "com.buzbuz.smartautoclicker.core.recording"
 }
 
 dependencies {
@@ -31,11 +31,7 @@ dependencies {
 
     implementation(project(":core:common:actions"))
     implementation(project(":core:common:base"))
-    implementation(project(":core:common:bitmaps"))
     implementation(project(":core:common:display"))
+    implementation(project(":core:common:overlays"))
     implementation(project(":core:common:settings"))
-    implementation(project(":core:recording"))
-    implementation(project(":core:smart:detection"))
-    implementation(project(":core:smart:detection-models"))
-    implementation(project(":core:smart:domain"))
 }

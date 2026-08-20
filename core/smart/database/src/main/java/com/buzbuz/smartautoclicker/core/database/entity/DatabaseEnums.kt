@@ -53,6 +53,8 @@ enum class ActionType {
     SYSTEM,
     /** Set the text of a focused view on the screen. */
     TEXT,
+    /** Replay a recorded touch sequence. */
+    PLAY_RECORDING,
 }
 
 

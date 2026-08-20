@@ -42,8 +42,10 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
-import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
+import com.buzbuz.smartautoclicker.core.recording.domain.RecordingRepository
+import com.buzbuz.smartautoclicker.core.recording.replay.ReplayEngine
+import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -82,6 +84,8 @@ class DetectorEngine @Inject constructor(
     private val appComponentsProvider: AppComponentsProvider,
     private val debuggingListener: SmartProcessingListener,
     private val ocrModelsRepository: OCRModelsRepository,
+    private val replayEngine: ReplayEngine,
+    private val recordingRepository: RecordingRepository,
 ) {
 
     /** Process the events conditions to detect them on the screen. */
@@ -263,6 +267,8 @@ class DetectorEngine @Inject constructor(
                 bitmapSupplier = bitmapRepository::getImageConditionBitmap,
                 androidExecutor = actionExecutor,
                 unblockWorkaroundEnabled = settingsRepository.isInputBlockWorkaroundEnabled(),
+                replayEngine = replayEngine,
+                recordingRepository = recordingRepository,
                 onStopRequested = { stopDetection() },
                 progressListener  = if (liveDebugging || generateReport) debuggingListener else null,
             )

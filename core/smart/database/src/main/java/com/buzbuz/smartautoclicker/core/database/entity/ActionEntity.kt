@@ -162,6 +162,14 @@ data class ActionEntity(
     // ActionType.TEXT
     @ColumnInfo(name = "text_value") val textValue: String? = null,
     @ColumnInfo(name = "text_validate_input") val textValidateInput: Boolean? = null,
+
+    // ActionType.PLAY_RECORDING
+    @ColumnInfo(name = "recording_id") val recordingId: Long? = null,
+    @ColumnInfo(name = "replay_speed") val replaySpeed: Float? = null,
+    @ColumnInfo(name = "replay_repeat") val replayRepeat: Int? = null,
+    @ColumnInfo(name = "replay_delay_ms") val replayDelayMs: Long? = null,
+    @ColumnInfo(name = "replay_randomize_px") val replayRandomizePx: Int? = null,
+    @ColumnInfo(name = "replay_randomize_timing_ms") val replayRandomizeTimingMs: Int? = null,
 ) : EntityWithId
 
 /**

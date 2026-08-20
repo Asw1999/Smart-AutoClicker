@@ -29,6 +29,8 @@ import com.buzbuz.smartautoclicker.core.processing.data.processor.state.Processi
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
 import com.buzbuz.smartautoclicker.core.processing.domain.EventType
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
+import com.buzbuz.smartautoclicker.core.recording.domain.RecordingRepository
+import com.buzbuz.smartautoclicker.core.recording.replay.ReplayEngine
 
 import kotlinx.coroutines.yield
 
@@ -54,6 +56,8 @@ internal class ScenarioProcessor(
     private val bitmapSupplier: suspend (String, Int, Int) -> Bitmap?,
     androidExecutor: AndroidActionExecutor,
     unblockWorkaroundEnabled: Boolean = false,
+    replayEngine: ReplayEngine? = null,
+    recordingRepository: RecordingRepository? = null,
     private val onStopRequested: () -> Unit,
     private val progressListener: SmartProcessingListener?,
 ) {
@@ -79,6 +83,8 @@ internal class ScenarioProcessor(
         processingState = processingState,
         randomize = randomize,
         unblockWorkaroundEnabled = unblockWorkaroundEnabled,
+        replayEngine = replayEngine,
+        recordingRepository = recordingRepository,
     )
 
     fun onScenarioStart(context: Context) {

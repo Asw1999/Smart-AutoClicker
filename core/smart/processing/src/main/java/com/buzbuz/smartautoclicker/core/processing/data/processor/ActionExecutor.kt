@@ -38,16 +38,18 @@ import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
-import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
-import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
-import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
-import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
+import com.buzbuz.smartautoclicker.core.domain.model.action.PlayRecording
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
+import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.putDomainExtra
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
+import com.buzbuz.smartautoclicker.core.recording.domain.RecordingRepository
+import com.buzbuz.smartautoclicker.core.recording.domain.ReplayParams
+import com.buzbuz.smartautoclicker.core.recording.replay.ReplayEngine
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -66,6 +68,8 @@ internal class ActionExecutor(
     private val processingState: ProcessingState,
     randomize: Boolean,
     unblockWorkaroundEnabled: Boolean = false,
+    private val replayEngine: ReplayEngine? = null,
+    private val recordingRepository: RecordingRepository? = null,
 ) {
 
     init { androidExecutor.resetState() }
@@ -101,6 +105,7 @@ internal class ActionExecutor(
                 is Notification -> executeNotification(event, action)
                 is SystemAction -> executeSystemAction(action)
                 is SetText -> executeSetText(action)
+                is PlayRecording -> executePlayRecording(action)
             }
         }
     }
@@ -303,6 +308,24 @@ internal class ActionExecutor(
                 validate = action.validateInput,
             )
         }
+    }
+
+    private suspend fun executePlayRecording(action: PlayRecording) {
+        val recordingId = action.recordingId ?: return
+        val recording = recordingRepository?.getRecording(recordingId) ?: run {
+            Log.w(TAG, "Recording with ID $recordingId not found, skipping replay")
+            return
+        }
+
+        val params = ReplayParams(
+            speedMultiplier = action.replaySpeed,
+            repeatCount = action.replayRepeat,
+            delayBetweenRepeatMs = action.replayDelayMs,
+            randomizePositionPx = action.replayRandomizePx,
+            randomizeTimingMs = action.replayRandomizeTimingMs,
+        )
+
+        replayEngine?.replay(recording, params)
     }
 }
 

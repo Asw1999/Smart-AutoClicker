@@ -168,6 +168,7 @@ dependencies {
     implementation(project(":core:common:settings"))
     implementation(project(":core:common:tutorial"))
     implementation(project(":core:common:ui"))
+    implementation(project(":core:recording"))
     implementation(project(":core:dumb"))
     implementation(project(":core:smart:debugging"))
     implementation(project(":core:smart:detection"))
@@ -182,5 +183,6 @@ dependencies {
     implementation(project(":feature:smart-config"))
     implementation(project(":feature:smart-debugging"))
     implementation(project(":feature:dumb-config"))
+    implementation(project(":feature:recording-config"))
     implementation(project(":feature:tutorial"))
 }
