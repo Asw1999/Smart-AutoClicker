@@ -35,8 +35,10 @@ import com.buzbuz.smartautoclicker.core.common.actions.text.replaceCounterRefere
 import com.buzbuz.smartautoclicker.core.common.actions.utils.getPauseDurationMs
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.OR
-import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
+import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
+import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.PlayRecording
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
