@@ -33,6 +33,8 @@ import com.buzbuz.smartautoclicker.core.display.recorder.DisplayRecorder
 import com.buzbuz.smartautoclicker.core.processing.data.DetectorEngine
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
+import com.buzbuz.smartautoclicker.core.recording.domain.RecordingRepository
+import com.buzbuz.smartautoclicker.core.recording.replay.ReplayEngine
 import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -83,6 +85,8 @@ class DetectorEngineOrientationTests {
     @Mock private lateinit var mockAppComponentsProvider: AppComponentsProvider
     @Mock private lateinit var mockDebuggingListener: SmartProcessingListener
     @Mock private lateinit var mockOcrModelsRepository: OCRModelsRepository
+    @Mock private lateinit var mockReplayEngine: ReplayEngine
+    @Mock private lateinit var mockRecordingRepository: RecordingRepository
 
     private val mockContext: Context = mock(Context::class.java)
     private val mockIntent: Intent = mock(Intent::class.java)
@@ -162,6 +166,8 @@ class DetectorEngineOrientationTests {
             appComponentsProvider = mockAppComponentsProvider,
             debuggingListener = mockDebuggingListener,
             ocrModelsRepository = mockOcrModelsRepository,
+            replayEngine = mockReplayEngine,
+            recordingRepository = mockRecordingRepository,
         )
 
         mockDisplayRecorder.stub { on { validateScreenCapture() } doReturn true }
