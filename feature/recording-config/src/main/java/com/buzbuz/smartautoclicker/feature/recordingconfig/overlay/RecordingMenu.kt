@@ -24,14 +24,13 @@ import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.recording.domain.Recording
 import com.buzbuz.smartautoclicker.core.recording.recorder.TouchRecorder
 import com.buzbuz.smartautoclicker.feature.recordingconfig.R
-import com.buzbuz.smartautoclicker.feature.recordingconfig.databinding.OverlayRecordingBorderBinding
 import com.buzbuz.smartautoclicker.feature.recordingconfig.databinding.OverlayRecordingMenuBinding
 
 /**
  * Floating overlay menu displayed during a gesture recording session.
  *
  * Provides live point count, pause/resume, stop (save), and cancel controls,
- * along with a green border indicating recording status.
+ * along with a canvas view that draws gesture trails and captures touch points.
  */
 class RecordingMenu(
     private val scenarioId: Long,
@@ -40,7 +39,7 @@ class RecordingMenu(
 ) : OverlayMenu(theme = R.style.AppTheme_Overlay_FloatingMenu_CardView) {
 
     private lateinit var menuBinding: OverlayRecordingMenuBinding
-    private var borderBinding: OverlayRecordingBorderBinding? = null
+    private var canvasView: RecordingCanvasView? = null
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
         menuBinding = OverlayRecordingMenuBinding.inflate(layoutInflater)
@@ -48,9 +47,11 @@ class RecordingMenu(
     }
 
     override fun onCreateOverlayView(): View {
-        val border = OverlayRecordingBorderBinding.inflate(LayoutInflater.from(context))
-        borderBinding = border
-        return border.root
+        val canvas = RecordingCanvasView(context, touchRecorder) { count ->
+            menuBinding.textPoints.text = "$count pts"
+        }
+        canvasView = canvas
+        return canvas
     }
 
     override fun onCreate() {
@@ -73,6 +74,7 @@ class RecordingMenu(
                 touchRecorder.pauseRecording()
                 menuBinding.btnPauseResume.setImageResource(R.drawable.ic_play_arrow)
                 menuBinding.statusDot.visibility = View.INVISIBLE
+                canvasView?.clearTrails()
                 setOverlayViewVisibility(false)
             }
             TouchRecorder.State.PAUSED -> {
