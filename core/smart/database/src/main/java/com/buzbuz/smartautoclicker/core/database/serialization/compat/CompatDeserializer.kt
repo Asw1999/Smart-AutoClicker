@@ -485,6 +485,7 @@ internal open class CompatDeserializer : Deserializer {
             ActionType.NOTIFICATION -> deserializeActionNotification(jsonAction)
             ActionType.SYSTEM -> deserializeActionSystem(jsonAction)
             ActionType.TEXT -> deserializeActionSetText(jsonAction)
+            ActionType.PLAY_RECORDING -> deserializeActionPlayRecording(jsonAction)
             null -> null
         }
 
@@ -695,6 +696,26 @@ internal open class CompatDeserializer : Deserializer {
             type = ActionType.TEXT,
             textValue = jsonSetText.getString("textValue") ?: "",
             textValidateInput = jsonSetText.getBoolean("textValidateInput") ?: false,
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    open fun deserializeActionPlayRecording(jsonPlayRecording: JsonObject): ActionEntity? {
+        val id = jsonPlayRecording.getLong("id", true) ?: return null
+        val eventId = jsonPlayRecording.getLong("eventId", true) ?: return null
+
+        return ActionEntity(
+            id = id,
+            eventId = eventId,
+            name = jsonPlayRecording.getString("name") ?: "",
+            priority = jsonPlayRecording.getInt("priority")?.coerceAtLeast(0) ?: 0,
+            type = ActionType.PLAY_RECORDING,
+            recordingId = jsonPlayRecording.getLong("recordingId"),
+            replaySpeed = jsonPlayRecording.getDouble("replaySpeed")?.toFloat() ?: 1.0f,
+            replayRepeat = jsonPlayRecording.getInt("replayRepeat") ?: 1,
+            replayDelayMs = jsonPlayRecording.getLong("replayDelayMs") ?: 0L,
+            replayRandomizePx = jsonPlayRecording.getInt("replayRandomizePx") ?: 0,
+            replayRandomizeTimingMs = jsonPlayRecording.getInt("replayRandomizeTimingMs") ?: 0,
         )
     }
 
