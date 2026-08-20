@@ -94,8 +94,14 @@ class ShizukuTouchRecorder @Inject constructor(
 
         recordingJob = CoroutineScope(Dispatchers.IO).launch {
             try {
-                // Determine touch device dimensions and start getevent
-                val process = Shizuku.newProcess(arrayOf("sh", "-c", "getevent -lt"), null, null)
+                // Determine touch device dimensions and start getevent via Shizuku
+                val newProcessMethod = Shizuku::class.java.getMethod(
+                    "newProcess",
+                    Array<String>::class.java,
+                    Array<String>::class.java,
+                    String::class.java,
+                )
+                val process = newProcessMethod.invoke(null, arrayOf("sh", "-c", "getevent -lt"), null, null) as Process
                 getEventProcess = process
 
                 val reader = BufferedReader(InputStreamReader(process.inputStream))
