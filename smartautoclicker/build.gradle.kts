@@ -139,6 +139,8 @@ if (project.isBuildForVariant(KlickrFlavour.PLAY_STORE, KlickrBuildType.RELEASE)
 
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.shizuku.api)
+    implementation(libs.shizuku.provider)
 
     implementation(libs.androidx.appCompat)
     implementation(libs.androidx.core.ktx)

@@ -39,7 +39,9 @@ import javax.inject.Singleton
  * IDLE -> RECORDING -> PAUSED -> RECORDING -> IDLE (via stop)
  */
 @Singleton
-class TouchRecorder @Inject constructor() {
+class TouchRecorder @Inject constructor(
+    val shizukuRecorder: ShizukuTouchRecorder,
+) {
 
     enum class State {
         IDLE,
@@ -49,6 +51,9 @@ class TouchRecorder @Inject constructor() {
 
     private val _state = MutableStateFlow(State.IDLE)
     val state: StateFlow<State> = _state.asStateFlow()
+
+    val isShizukuAvailable: Boolean
+        get() = shizukuRecorder.isShizukuAvailable()
 
     private val recordedEvents = mutableListOf<TouchEvent>()
     private var recordingStartTimeUptimeMs: Long = 0L
@@ -62,7 +67,7 @@ class TouchRecorder @Inject constructor() {
      *
      * @param scenarioId the scenario this recording will be associated with.
      */
-    fun startRecording(scenarioId: Long) {
+    fun startRecording(scenarioId: Long, onPointsUpdated: ((Int) -> Unit)? = null) {
         synchronized(recordedEvents) {
             recordedEvents.clear()
             activeScenarioId = scenarioId
@@ -70,6 +75,13 @@ class TouchRecorder @Inject constructor() {
             pausedTimeOffsetMs = 0L
             recordingStartTimeUptimeMs = SystemClock.uptimeMillis()
             _state.value = State.RECORDING
+
+            if (shizukuRecorder.isShizukuAvailable()) {
+                shizukuRecorder.startRecording(
+                    onEventCaptured = { event -> addTouchEvent(event) },
+                    onPointsCountUpdated = { count -> onPointsUpdated?.invoke(count) },
+                )
+            }
         }
     }
 
@@ -80,15 +92,36 @@ class TouchRecorder @Inject constructor() {
         if (_state.value != State.RECORDING) return
         pauseStartTimeUptimeMs = SystemClock.uptimeMillis()
         _state.value = State.PAUSED
+        shizukuRecorder.stopRecording()
     }
 
     /**
      * Resume a paused recording session.
      */
-    fun resumeRecording() {
+    fun resumeRecording(onPointsUpdated: ((Int) -> Unit)? = null) {
         if (_state.value != State.PAUSED) return
         pausedTimeOffsetMs += SystemClock.uptimeMillis() - pauseStartTimeUptimeMs
         _state.value = State.RECORDING
+
+        if (shizukuRecorder.isShizukuAvailable()) {
+            shizukuRecorder.startRecording(
+                onEventCaptured = { event -> addTouchEvent(event) },
+                onPointsCountUpdated = { count -> onPointsUpdated?.invoke(count) },
+            )
+        }
+    }
+
+    /**
+     * Directly add a touch event captured from external sources (e.g. Shizuku / kernel).
+     */
+    fun addTouchEvent(event: TouchEvent) {
+        if (_state.value != State.RECORDING) return
+        synchronized(recordedEvents) {
+            if (event.pointerIndex + 1 > maxPointersSeen) {
+                maxPointersSeen = event.pointerIndex + 1
+            }
+            recordedEvents.add(event)
+        }
     }
 
     /**
@@ -98,6 +131,7 @@ class TouchRecorder @Inject constructor() {
      * @return the assembled [Recording] containing all captured touch events.
      */
     fun stopRecording(recordingName: String? = null): Recording {
+        shizukuRecorder.stopRecording()
         synchronized(recordedEvents) {
             val totalDurationMs = if (recordedEvents.isNotEmpty()) {
                 recordedEvents.last().timestampMs
@@ -126,6 +160,7 @@ class TouchRecorder @Inject constructor() {
      * Cancel the current recording and discard all captured data.
      */
     fun cancelRecording() {
+        shizukuRecorder.stopRecording()
         synchronized(recordedEvents) {
             recordedEvents.clear()
             _state.value = State.IDLE

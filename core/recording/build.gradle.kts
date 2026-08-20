@@ -28,6 +28,8 @@ android {
 
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.shizuku.api)
+    implementation(libs.shizuku.provider)
 
     implementation(project(":core:common:actions"))
     implementation(project(":core:common:base"))
